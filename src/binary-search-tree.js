@@ -25,6 +25,27 @@ class BinarySearchTree {
       return (main.right === null) ? main.right = list : this.insert(main.right, list)
     }
   }
+  findList(node, data) {
+    if (data === node.data) {
+      return node
+    } else if (data < node.data) {
+      if (node.left && node.left.data === data) {
+        return node.left
+      } else if (node.left) {
+        return this.findList(node.left, data)
+      } else {
+        return null
+      }
+    } else {
+      if (node.right && node.right.data === data) {
+        return node.right
+      } else if (node.right) {
+        return this.findList(node.right, data)
+      } else {
+        return null
+      }
+    }
+  }
 
   root() {
     return this.main
@@ -49,24 +70,80 @@ class BinarySearchTree {
     }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data) {
+    if (this.main.data === data) {
+      return this.main
+    } else if (data < this.min()) {
+      return null
+    } else if (data > this.max()) {
+      return null
+    } else {
+      return this.findList(this.main, data)
+    }
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  
+
+
+  remove(data) {
+    const removeNode = (list, data) => {
+      if (!list) {
+        return null;
+      }
+
+      if (data === list.data) {
+        if (!list.left && !list.right) {
+          return null;
+        }
+
+        if (!list.left) {
+          return list.right;
+        }
+
+        if (!list.right) {
+          return list.left;
+        }
+
+        let templist = list.right;
+        while (templist.left) {
+          templist = templist.left;
+        }
+
+        list.data = templist.data;
+        list.right = removeNode(list.right, templist.data);
+        return list;
+      } else if (data < list.data) {
+        list.left = removeNode(list.left, data);
+        return list;
+      } else {
+        list.right = removeNode(list.right, data);
+        return list;
+      }
+    }
+
+    this.main = removeNode(this.main, data);
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.findMin(this.main)
+  }
+  findMin(list) {
+    if (list.left === null) {
+      return list.tree
+    } else {
+      return this.findMin(list.left)
+    }
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.findMax(this.main)
+  }
+  findMax(list) {
+    if (list.right === null) {
+      return list.data
+    } else {
+      return this.findMax(list.right)
+    }
   }
 }
 
